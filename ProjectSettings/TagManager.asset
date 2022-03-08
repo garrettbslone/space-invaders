@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Shield Part
+  - Enemy Bullet
+  - Player Bullet
   layers:
   - Default
   - TransparentFX
