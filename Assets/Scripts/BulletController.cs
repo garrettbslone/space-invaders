@@ -24,11 +24,10 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Shield Part"))
-        {
-            Destroy(other.gameObject);
-            Destroy(gameObject);
-        }
+        if (!other.CompareTag("Shield Part") && !other.CompareTag("Player Bullet") &&
+            !other.CompareTag("Enemy Bullet")) return;
+        Destroy(other.gameObject);
+        Destroy(gameObject);
     }
 
 }

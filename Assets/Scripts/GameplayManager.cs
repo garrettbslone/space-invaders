@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,6 +10,7 @@ public class GameplayManager : MonoBehaviour
     public GameObject shield, enemyParent; 
     public GameObject[] enemies;
 
+    private TMP_Text _scoreText, _highScoreText;
     private List<GameObject> _shields;
     private List<List<GameObject>> _enemies;
     private GameObject _player;
@@ -22,6 +24,8 @@ public class GameplayManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _scoreText = GameObject.Find("Score Text").GetComponent<TMP_Text>();
+        _highScoreText = GameObject.Find("High Score Text").GetComponent<TMP_Text>();
         _player = GameObject.Find("Player");
         _player.GetComponent<PlayerController>().onShot = PlayerShot;
         _enemyBase = enemyParent.transform;
@@ -81,6 +85,8 @@ public class GameplayManager : MonoBehaviour
         _enemiesCnt--;
         _score += points;
 
+        _scoreText.text = $"Score\n{_score:0000}";
+
         List<GameObject> r = null;
         
         foreach (var row in _enemies)
@@ -96,7 +102,7 @@ public class GameplayManager : MonoBehaviour
 
         r?.Remove(enemy);
         
-        if (r.Count == 0)
+        if (r is { Count: 0 })
         {
             _enemies.Remove(r);
         }
@@ -110,6 +116,7 @@ public class GameplayManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("highScore", _score);
             _highScore = _score;
+            _highScoreText.text = $"Hi-Score\n{_highScore:0000}";
         }
 
         _score = 0;
