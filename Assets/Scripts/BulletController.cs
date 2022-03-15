@@ -7,12 +7,15 @@ public class BulletController : MonoBehaviour
 {
     public int direction = 1;
     public float speed = 3f;
+    public bool flip = false;
 
     private Rigidbody2D _rigidbody;
     
     // Start is called before the first frame update
     void Start()
     {
+        if (flip)
+            transform.rotation = Quaternion.Euler(180f, 0f, 0f);
         _rigidbody = GetComponent<Rigidbody2D>();
         Fire();
     }

@@ -13,13 +13,13 @@ public class GameplayManager : MonoBehaviour
     private TMP_Text _scoreText, _highScoreText;
     private List<GameObject> _shields;
     private List<List<GameObject>> _enemies;
-    private GameObject _player;
+    private GameObject _player, _manager;
     private Transform _enemyBase;
     private int _score = 0, _highScore, _direction = 1, _enemiesCnt = 20;
-    private const float _speed = 1f;
+    private float _speed = 1f, _overtm = 1f;
     private float _elapsed = 0f, _nextEnemyShot, _elapsedSinceShot = 0f;
     private readonly Vector2 _enemyShotRange = new Vector2(0.7f, 2.7f);
-    private bool _switching = false;
+    private bool _switching = false, _over = false;
     
     // Start is called before the first frame update
     void Start()
@@ -31,6 +31,7 @@ public class GameplayManager : MonoBehaviour
         _enemyBase = enemyParent.transform;
         _highScore = PlayerPrefs.GetInt("highScore", 0);
         _nextEnemyShot = Random.Range(_enemyShotRange.x, _enemyShotRange.y);
+        _manager = GameObject.Find("GameManagerObj");
         RestartGame();
     }
 
@@ -68,6 +69,15 @@ public class GameplayManager : MonoBehaviour
             _nextEnemyShot = Random.Range(_enemyShotRange.x, _enemyShotRange.y);
             _elapsedSinceShot = 0f;
         }
+
+        if (_over)
+        {
+            _overtm -= Time.deltaTime;
+            if (_overtm <= 0f)
+            {
+                _manager.GetComponent<GameManager>().LoadScene("CreditsScene");
+            }
+        }
     }
 
     void PlayerShot(int livesRemaining, GameObject bullet)
@@ -75,6 +85,8 @@ public class GameplayManager : MonoBehaviour
         if (livesRemaining == 0)
         {
             Debug.Log("Game over!");
+            _over = true;
+            // _manager.GetComponent<GameManager>().LoadScene("CreditsScene");
         }
 
         Destroy(bullet);
@@ -84,6 +96,11 @@ public class GameplayManager : MonoBehaviour
     {
         _enemiesCnt--;
         _score += points;
+
+        if (_enemiesCnt == 0)
+        {
+            _manager.GetComponent<GameManager>().LoadScene("CreditsScene");
+        }
 
         _scoreText.text = $"Score\n{_score:0000}";
 
